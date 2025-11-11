@@ -1,0 +1,26 @@
+# ninja log v7
+3	1122	7842604043983204	CMakeFiles/QuanLyLop.dir/main.cpp.obj	3fce5d9f69c1eba7
+18	979	7832482527623449	CMakeFiles/QuanLyLop.dir/quanlylop.cpp.obj	7928b452ab2cd435
+9	1057	7845790944305073	CMakeFiles/QuanLyLop.dir/quanli_sinhvien.cpp.obj	e398bc53d31b1759
+1262	1382	7842604056585065	QuanLyLop.exe	18d2890f35d6ac45
+14	1035	7845790944355068	CMakeFiles/QuanLyLop.dir/quanli_cauhoi.cpp.obj	bf90649c49ed8a1e
+12	999	7845790944325089	CMakeFiles/QuanLyLop.dir/quanly_lop.cpp.obj	179db24eb621e940
+6	1103	7842604043983204	CMakeFiles/QuanLyLop.dir/quanli_monhoc.cpp.obj	14b2301e8292d87a
+9	1262	7842604043983204	CMakeFiles/QuanLyLop.dir/utils.cpp.obj	fa1a944cab49c737
+18	995	7845792368740579	CMakeFiles/QuanLyLop.dir/quanly_lop.cpp.obj	179db24eb621e940
+20	1024	7845792368826095	CMakeFiles/QuanLyLop.dir/quanli_cauhoi.cpp.obj	bf90649c49ed8a1e
+15	1057	7845792368740579	CMakeFiles/QuanLyLop.dir/quanli_sinhvien.cpp.obj	e398bc53d31b1759
+11	1033	7845794523989034	CMakeFiles/QuanLyLop.dir/quanly_lop.cpp.obj	179db24eb621e940
+13	1048	7845794524004943	CMakeFiles/QuanLyLop.dir/quanli_cauhoi.cpp.obj	bf90649c49ed8a1e
+8	1051	7845794523959030	CMakeFiles/QuanLyLop.dir/quanli_sinhvien.cpp.obj	e398bc53d31b1759
+22	1045	7845795002462384	CMakeFiles/QuanLyLop.dir/quanly_lop.cpp.obj	179db24eb621e940
+24	1068	7845795002492438	CMakeFiles/QuanLyLop.dir/quanli_cauhoi.cpp.obj	bf90649c49ed8a1e
+19	1070	7845795002432382	CMakeFiles/QuanLyLop.dir/quanli_sinhvien.cpp.obj	e398bc53d31b1759
+6	1121	7845795964699639	CMakeFiles/QuanLyLop.dir/main.cpp.obj	3fce5d9f69c1eba7
+8	1148	7845795964727374	CMakeFiles/QuanLyLop.dir/quanli_monhoc.cpp.obj	14b2301e8292d87a
+11	1295	7845795964748270	CMakeFiles/QuanLyLop.dir/utils.cpp.obj	fa1a944cab49c737
+1295	1463	7845795977589383	QuanLyLop.exe	18d2890f35d6ac45
+18	1140	7845797035742540	CMakeFiles/QuanLyLop.dir/main.cpp.obj	3fce5d9f69c1eba7
+21	1151	7845797035787702	CMakeFiles/QuanLyLop.dir/quanli_monhoc.cpp.obj	14b2301e8292d87a
+24	1305	7845797035807701	CMakeFiles/QuanLyLop.dir/utils.cpp.obj	fa1a944cab49c737
+1306	1426	7845797048623582	QuanLyLop.exe	18d2890f35d6ac45

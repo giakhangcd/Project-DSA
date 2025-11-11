@@ -1,0 +1,38 @@
+[
+{
+  "directory": "C:/Users/pc/Documents/Project/build",
+  "command": "C:\\Users\\pc\\Downloads\\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r2\\mingw64\\bin\\c++.exe -IC:/Users/pc/Documents/Project/include -g -std=gnu++17 -o CMakeFiles\\QuanLyLop.dir\\main.cpp.obj -c C:\\Users\\pc\\Documents\\Project\\main.cpp",
+  "file": "C:/Users/pc/Documents/Project/main.cpp",
+  "output": "C:/Users/pc/Documents/Project/build/CMakeFiles/QuanLyLop.dir/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/pc/Documents/Project/build",
+  "command": "C:\\Users\\pc\\Downloads\\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r2\\mingw64\\bin\\c++.exe -IC:/Users/pc/Documents/Project/include -g -std=gnu++17 -o CMakeFiles\\QuanLyLop.dir\\quanli_sinhvien.cpp.obj -c C:\\Users\\pc\\Documents\\Project\\quanli_sinhvien.cpp",
+  "file": "C:/Users/pc/Documents/Project/quanli_sinhvien.cpp",
+  "output": "C:/Users/pc/Documents/Project/build/CMakeFiles/QuanLyLop.dir/quanli_sinhvien.cpp.obj"
+},
+{
+  "directory": "C:/Users/pc/Documents/Project/build",
+  "command": "C:\\Users\\pc\\Downloads\\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r2\\mingw64\\bin\\c++.exe -IC:/Users/pc/Documents/Project/include -g -std=gnu++17 -o CMakeFiles\\QuanLyLop.dir\\quanly_lop.cpp.obj -c C:\\Users\\pc\\Documents\\Project\\quanly_lop.cpp",
+  "file": "C:/Users/pc/Documents/Project/quanly_lop.cpp",
+  "output": "C:/Users/pc/Documents/Project/build/CMakeFiles/QuanLyLop.dir/quanly_lop.cpp.obj"
+},
+{
+  "directory": "C:/Users/pc/Documents/Project/build",
+  "command": "C:\\Users\\pc\\Downloads\\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r2\\mingw64\\bin\\c++.exe -IC:/Users/pc/Documents/Project/include -g -std=gnu++17 -o CMakeFiles\\QuanLyLop.dir\\quanli_cauhoi.cpp.obj -c C:\\Users\\pc\\Documents\\Project\\quanli_cauhoi.cpp",
+  "file": "C:/Users/pc/Documents/Project/quanli_cauhoi.cpp",
+  "output": "C:/Users/pc/Documents/Project/build/CMakeFiles/QuanLyLop.dir/quanli_cauhoi.cpp.obj"
+},
+{
+  "directory": "C:/Users/pc/Documents/Project/build",
+  "command": "C:\\Users\\pc\\Downloads\\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r2\\mingw64\\bin\\c++.exe -IC:/Users/pc/Documents/Project/include -g -std=gnu++17 -o CMakeFiles\\QuanLyLop.dir\\quanli_monhoc.cpp.obj -c C:\\Users\\pc\\Documents\\Project\\quanli_monhoc.cpp",
+  "file": "C:/Users/pc/Documents/Project/quanli_monhoc.cpp",
+  "output": "C:/Users/pc/Documents/Project/build/CMakeFiles/QuanLyLop.dir/quanli_monhoc.cpp.obj"
+},
+{
+  "directory": "C:/Users/pc/Documents/Project/build",
+  "command": "C:\\Users\\pc\\Downloads\\winlibs-x86_64-posix-seh-gcc-15.2.0-mingw-w64ucrt-13.0.0-r2\\mingw64\\bin\\c++.exe -IC:/Users/pc/Documents/Project/include -g -std=gnu++17 -o CMakeFiles\\QuanLyLop.dir\\utils.cpp.obj -c C:\\Users\\pc\\Documents\\Project\\utils.cpp",
+  "file": "C:/Users/pc/Documents/Project/utils.cpp",
+  "output": "C:/Users/pc/Documents/Project/build/CMakeFiles/QuanLyLop.dir/utils.cpp.obj"
+}
+]

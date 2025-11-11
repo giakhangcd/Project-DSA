@@ -1,0 +1,3 @@
+C:/Users/pc/Documents/Project/build/CMakeFiles/QuanLyLop.dir
+C:/Users/pc/Documents/Project/build/CMakeFiles/edit_cache.dir
+C:/Users/pc/Documents/Project/build/CMakeFiles/rebuild_cache.dir

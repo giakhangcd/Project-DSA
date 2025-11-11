@@ -1,0 +1,4 @@
+MAMH|ID|NOIDUNG|A|B|C|D|DAPAN
+CTDL|1001|Stack la cau truc gi?|LIFO|FIFO|LILO|LILO+FIFO|A
+CTDL|1002|Queue la cau truc gi?|LIFO|FIFO|FILO|None|B
+THDC|2001|Kieu du lieu nao la so nguyen?|int|double|float|char|A
