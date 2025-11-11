@@ -1,0 +1,29 @@
+cmake_minimum_required(VERSION 3.10)
+project(QuanLyLop)
+
+# Dùng chuẩn C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Thêm thư mục include chứa file header (.h)
+include_directories(include)
+
+# Liệt kê các file nguồn của bạn
+set(SOURCES
+    main.cpp
+    quanli_sinhvien.cpp
+    quanly_lop.cpp
+    quanli_cauhoi.cpp
+    quanli_monhoc.cpp
+    utils.cpp
+)
+
+# Tạo file thực thi
+add_executable(QuanLyLop ${SOURCES})
+
+add_custom_command(
+    TARGET QuanLyLop POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/data
+        ${CMAKE_BINARY_DIR}/data
+)
