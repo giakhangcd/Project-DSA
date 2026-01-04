@@ -1,0 +1,20 @@
+OOP|2001|Tinh dong goi la gi?|Che giau thong tin ben trong doi tuong|Tach chuong trinh thanh ham nho|Tang toc do CPU|Giam dung luong RAM|A
+OOP|2002|Tinh ke thua la gi?|Class moi ke thua thuoc tinh va phuong thuc cua class cu|Ham goi lai chinh no|Bien duoc chia se giua ham|Gop nhieu file code|A
+OOP|2003|Tinh da hinh la gi?|Mot giao dien nhieu cach cai dat|Mot ham duy nhat|Mot class khong the ke thua|Mot bien nhieu kieu|A
+OOP|2004|Constructor dung de lam gi?|Khoi tao doi tuong|Huy doi tuong|Ghi file|Doc file|A
+OOP|2005|Destructor dung de lam gi?|Giai phong tai nguyen khi doi tuong huy|Tao doi tuong|Nhap du lieu|In du lieu|A
+OOP|2006|Tu khoa this dung lam gi?|Chi den doi tuong hien tai|Chi den lop cha|Chi den lop con|Chi den bien toan cuc|A
+OOP|2007|Tu khoa new dung de lam gi?|Cap phat dong bo nho|Giai phong bo nho|Nhap du lieu|Chuyen kieu du lieu|A
+OOP|2008|Tu khoa delete dung de lam gi?|Giai phong bo nho cap phat bang new|Cap phat bo nho moi|Ep kieu du lieu|Dung chuong trinh|A
+OOP|2009|Class la gi?|Kieu du lieu do nguoi dung dinh nghia|Ham thu vien san co|Bien toan cuc|File tieu de|A
+OOP|2010|Object la gi?|Mot the hien cu the cua class|Mot ham|Mot thu vien|Mot bien toan cuc|A
+OOP|2011|Quyen truy cap public co y nghia gi?|Co the truy cap tu moi noi|Chi truy cap trong class|Chi truy cap trong file|Chi truy cap trong ham main|A
+OOP|2012|Quyen truy cap private co y nghia gi?|Chi truy cap duoc ben trong class|Truy cap o moi noi|Chi truy cap tu lop ke thua|Chi truy cap tu ham friend|A
+OOP|2013|Quyen truy cap protected dung khi nao?|Truy cap trong class va lop ke thua|Truy cap o moi noi|Chi trong ham main|Chi trong file hien tai|A
+OOP|2014|Nap chong ham function overloading la gi?|Nhieu ham trung ten khac tham so|Ham goi lai chinh no|Ham khong co gia tri tra ve|Ham chi dung 1 lan|A
+OOP|2015|Nap chong toan tu operator overloading cho phep?|Dinh nghia lai cach hoat dong cua toan tu|Dinh nghia bien moi|Dinh nghia kieu co ban|Dinh nghia ham main|A
+OOP|2016|Class truu tuong abstract class la gi?|Class co it nhat mot ham ao thuong|Class khong co thuoc tinh|Class khong co ham|Class chi dung mot lan|A
+OOP|2017|Interface trong OOP thuong duoc hieu la gi?|Tap cac phuong thuc truu tuong|Tap cac bien toan cuc|Tap cac hang so|Tap cac file header|A
+OOP|2018|Ke thua da cap multi level inheritance la gi?|Lop A -> B -> C lan luot ke thua nhau|Mot lop ke thua nhieu lop|Nhieu lop ke thua mot lop|Khong ke thua|A
+OOP|2019|Ke thua da ke thua multiple inheritance la gi?|Mot lop ke thua tu nhieu lop cha|Nhieu lop ke thua 1 lop cha|Mot lop khong ke thua ai|Mot lop ke thua tu interface|A
+OOP|2020|Loi khi quen viet destructor trong lop co con tro dong la gi?|Ro ri bo nho memory leak|Loi chia cho 0|Tran bo dem|Sai kieu du lieu|A

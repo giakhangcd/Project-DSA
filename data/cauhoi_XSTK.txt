@@ -1,0 +1,20 @@
+XSTK|4001|Xac suat la gi?|Kha nang xay ra su kien|Tong cac bien|Thu tu sap xep|Gia tri lon nhat|A
+XSTK|4002|Tong xac suat bang bao nhieu?|1|0|2|Khong xac dinh|A
+XSTK|4003|Bien ngau nhien la gi?|Bien co gia tri khong chac chan|Bien co gia tri co dinh|Bien am|Bien duong|A
+XSTK|4004|Ky vong la gi?|Gia tri trung binh|Gia tri lon nhat|Gia tri nho nhat|Gia tri 0|A
+XSTK|4005|Phan phoi la gi?|Cach cac gia tri xuat hien|Kich thuoc tap|Danh sach|So ngau nhien|A
+XSTK|4006|Bien nhi phan co gia tri?|0 hoac 1|1 hoac 2|2 hoac 3|3 hoac 4|A
+XSTK|4007|Phan phoi deu uniform co dac diem?|Tat ca gia tri co xac suat bang nhau|Gia tri cuoi cung lon nhat|Chi co 1 ket qua|Chi co 2 ket qua|A
+XSTK|4008|Phan phoi nhi thuc binomial dung khi?|Lap lai n lan moi lan co p|Tat ca gia tri deu nhau|Khong co xac suat|Gia tri luon bang 0|A
+XSTK|4009|Cong thuc P(A∩B) khi A, B doc lap?|P(A)*P(B)|P(A)+P(B)|P(A)-P(B)|1|A
+XSTK|4010|Phan phoi Poisson dung cho?|So su kien hiem xay ra trong khoang thoi gian|Gia tri lon nhat|Do dai mang|So lan lap|A
+XSTK|4011|Phan sai variance la?|Do do phan tan so lieu|Tong so lieu|Gia tri lon nhat|Gia tri nho nhat|A
+XSTK|4012|Do lech chuan la?|Can bac hai cua phan sai|Tong so lieu|Gia tri tuyet doi|Gia tri lon nhat|A
+XSTK|4013|Mau la gi?|Tap con lay ra tu quan the|Tat ca du lieu|Gia tri duy nhat|Gia tri sai|A
+XSTK|4014|Quan the la gi?|Tat ca doi tuong can xet|Mot tap con nho|Gia tri sai|Gia tri lon nhat|A
+XSTK|4015|Luat lon so la gi?|Mau lon thi gia tri trung binh gan ky vong|Gia tri tăng mãi|Gia tri giam mãi|Không thay đổi|A
+XSTK|4016|Khoang tin cay 95% nghia la?|Co 95% kha nang chua tham so|Gom 95 du lieu|Sai so 95|Xac suat 95|A
+XSTK|4017|Bien ngau nhien rời rạc la?|Bien co cac gia tri dem duoc|Bien lien tuc|Bien am|Bien duong|A
+XSTK|4018|Bien ngau nhien lien tuc la?|Bien lay vo so gia tri trong khoang|Chi co 1 gia tri|Khong thay doi|Chi co so nguyen|A
+XSTK|4019|Trung vi median la gi?|Gia tri o giua sau khi sap xep|Gia tri lon nhat|Tong cac gia tri|Gia tri nho nhat|A
+XSTK|4020|Mode la gi?|Gia tri xuat hien nhieu nhat|Gia tri lon nhat|Gia tri nho nhat|Gia tri 0|A

@@ -1,0 +1,10 @@
+MALOP|TENLOP
+D21CQCN01|Cong nghe thong tin 1
+D21CQCN02|Cong nghe thong tin 2
+D21CQKT01|Ke toan 1
+D21CQKT02|Ke toan 2
+D21CQDL01|Du lich 1
+D21CQDL02|Du lich 2
+D21CQAT01|An toan thong tin 1
+D21CQAT02|An toan thong tin 2
+
