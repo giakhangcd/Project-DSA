@@ -1037,12 +1037,14 @@ static void xoaFooterGrid(const FooterGrid& G) {
     int c2 = _getch();
 
         if (c2 == 72) { // UP
+            if (cursor == soCau) continue;
             int old = curAns;
             curAns = (curAns + 3) % 4;
             veMotDapAn(gExamLayout, dsCauThi[cursor],old, false, dsDaChon[cursor] == "ABCD"[old]);
             veMotDapAn(gExamLayout, dsCauThi[cursor],curAns, true, dsDaChon[cursor] == "ABCD"[curAns]);
 }
     else if (c2 == 80) { // DOWN
+        if (cursor == soCau) continue;
         int old = curAns;
         curAns = (curAns + 1) % 4;
         veMotDapAn(gExamLayout, dsCauThi[cursor],old, false, dsDaChon[cursor] == "ABCD"[old]);
@@ -1070,6 +1072,8 @@ static void xoaFooterGrid(const FooterGrid& G) {
         if(cursor < soCau){
             veNoiDungCau_KhongClear(gExamLayout, dsCauThi[cursor], dsDaChon[cursor], curAns, cursor, soCau);
         }
+        else
+            capNhatFooterCell(gFooter, oldCursor, 0, false); // hoặc bỏ qua
     }
 
 
@@ -1089,7 +1093,8 @@ static void xoaFooterGrid(const FooterGrid& G) {
     capNhatFooterCell(gFooter, oldCursor, dsDaChon[oldCursor], false);
     if (cursor < soCau)
         capNhatFooterCell(gFooter, cursor, dsDaChon[cursor], true);
-
+        else
+            capNhatFooterCell(gFooter, oldCursor, 0, false); // hoặc bỏ qua
     // vẽ nội dung
     if (cursor == soCau) {
         // giao diện NỘP BÀI
@@ -1136,8 +1141,27 @@ else if (c == 13) { // ENTER
             daNop = true;
             ketThuc = true;
         } else {
-            veNoiDungCau(gExamLayout,dsCauThi[cursor],dsDaChon[cursor],curAns,cursor,soCau);
-        }
+    // quay lại câu cuối
+    cursor = soCau - 1;
+
+    if (dsDaChon[cursor] == 'A') curAns = 0;
+    else if (dsDaChon[cursor] == 'B') curAns = 1;
+    else if (dsDaChon[cursor] == 'C') curAns = 2;
+    else if (dsDaChon[cursor] == 'D') curAns = 3;
+    else curAns = 0;
+
+    capNhatFooterCell(gFooter, cursor, dsDaChon[cursor], true);
+
+    veNoiDungCau_KhongClear(
+        gExamLayout,
+        dsCauThi[cursor],
+        dsDaChon[cursor],
+        curAns,
+        cursor,
+        soCau
+    );
+}
+
     }
 }
 
@@ -1248,6 +1272,99 @@ void inDSSVTrongLop(const Lop* lop) {
     waitEsc("\nNhan ESC de quay lai danh sach lop...");
     clearConsole();
 }
+
+Lop* chonLopBangMuiTen(const DS_LOP &ds) {
+    if (ds.n == 0) {
+        clearConsole();
+        std::cout << "Khong co lop nao trong he thong.\n";
+        waitEsc("\nNhan ESC de quay lai...");
+        clearConsole();
+        return NULL;
+    }
+
+    hideCursor(true);
+    setColor(7);
+    clearConsole();   // ✅ CHỈ GỌI 1 LẦN
+
+    UILayout L;
+    beginScreenBox("=== CHON LOP ===", 80, 20, L);
+
+    boxPrint(L, 3, 2, "Dung MUI TEN LEN/XUONG de chon lop");
+    boxPrint(L, 3, 3, "ENTER de xac nhan, ESC de huy");
+
+    int current = 0;
+    int total   = ds.n;
+
+    short baseX = L.boxX + 3;
+    short baseY = L.boxY + 5;
+    int   lineW = L.boxW - 6;
+
+    // ===== IN DANH SÁCH LẦN ĐẦU =====
+    for (int i = 0; i < total; i++) {
+        char buf[80];
+        std::snprintf(buf, sizeof(buf), "%s - %s",
+                      ds.nodes[i]->MALOP,
+                      ds.nodes[i]->TENLOP);
+        drawOptionLineAt(baseX, baseY + i, buf, (i == current), lineW);
+    }
+
+    // ===== VÒNG LẶP PHÍM – KHÔNG NHÁY =====
+    while (true) {
+        int c = _getch();
+
+        if (c == 0 || c == 224) {
+            int k = _getch();
+
+            if (k == 72) { // ↑ UP
+                // xoá highlight cũ
+                char bufOld[80];
+                std::snprintf(bufOld, sizeof(bufOld), "%s - %s",
+                              ds.nodes[current]->MALOP,
+                              ds.nodes[current]->TENLOP);
+                drawOptionLineAt(baseX, baseY + current, bufOld, false, lineW);
+
+                current--;
+                if (current < 0) current = total - 1;
+
+                // tô highlight mới
+                char bufNew[80];
+                std::snprintf(bufNew, sizeof(bufNew), "%s - %s",
+                              ds.nodes[current]->MALOP,
+                              ds.nodes[current]->TENLOP);
+                drawOptionLineAt(baseX, baseY + current, bufNew, true, lineW);
+            }
+            else if (k == 80) { // ↓ DOWN
+                char bufOld[80];
+                std::snprintf(bufOld, sizeof(bufOld), "%s - %s",
+                              ds.nodes[current]->MALOP,
+                              ds.nodes[current]->TENLOP);
+                drawOptionLineAt(baseX, baseY + current, bufOld, false, lineW);
+
+                current++;
+                if (current >= total) current = 0;
+
+                char bufNew[80];
+                std::snprintf(bufNew, sizeof(bufNew), "%s - %s",
+                              ds.nodes[current]->MALOP,
+                              ds.nodes[current]->TENLOP);
+                drawOptionLineAt(baseX, baseY + current, bufNew, true, lineW);
+            }
+        }
+        else if (c == 13) { // ENTER
+            hideCursor(false);
+            setColor(7);
+            clearConsole();
+            return ds.nodes[current];   // ✅ LỚP ĐƯỢC CHỌN
+        }
+        else if (c == KEY_ESC) {
+            hideCursor(false);
+            setColor(7);
+            clearConsole();
+            return NULL;               // ❌ HỦY
+        }
+    }
+}
+
 
 void xemDSLopBangMuiTen(const DS_LOP &ds) {
     clearConsole();
@@ -1939,6 +2056,22 @@ bool nhapSinhVienBangForm(SinhVien &sv) {
         // ENTER
         if (c == 13) {
             // Nếu đang đứng ở dòng [ XAC NHAN ] -> validate + popup YES/NO
+
+            // ❌ Không cho bỏ trống field
+if (current <= 3) {
+    char* field = nullptr;
+    if (current == 0) field = sv.MASV;
+    else if (current == 1) field = sv.HO;
+    else if (current == 2) field = sv.TEN;
+    else if (current == 3) field = sv.PHAI;
+
+    if (field && std::strlen(field) == 0) {
+        Beep(900, 120);
+        continue;   // ❌ không cho ENTER đi tiếp
+    }
+}
+
+
             if (current == 5) {
                 hideCursor(false);
                 setColor(7);
@@ -2003,34 +2136,68 @@ bool nhapSinhVienBangForm(SinhVien &sv) {
         }
 
         // Ký tự in được -> thêm vào field hiện tại (0..4)
-        if (c >= 32 && c < 127 && current <= 4) {
-            char* field = NULL;
-            size_t maxLen = 0;
+        // ===== NHẬP KÝ TỰ – CHẶN SAI NGAY TỪ BÀN PHÍM =====
+if (c >= 32 && c < 127 && current <= 4) {
+    char* field = nullptr;
+    size_t maxLen = 0;
+    bool hopLe = true;
 
-            if (current == 0) {
-                field = sv.MASV;
-                maxLen = sizeof(sv.MASV);
-            } else if (current == 1) {
-                field = sv.HO;
-                maxLen = sizeof(sv.HO);
-            } else if (current == 2) {
-                field = sv.TEN;
-                maxLen = sizeof(sv.TEN);
-            } else if (current == 3) {
-                field = sv.PHAI;
-                maxLen = sizeof(sv.PHAI);
-            } else {
-                field = sv.password;
-                maxLen = sizeof(sv.password);
-            }
-
-            size_t len = std::strlen(field);
-            if (len + 1 < maxLen) {
-                field[len]     = (char)c;
-                field[len + 1] = '\0';
-                renderRow(current, true);
-            }
+    // MASV: chỉ chữ + số
+    if (current == 0) {
+        if (!std::isalnum(c)) hopLe = false;
+        field = sv.MASV;
+        maxLen = sizeof(sv.MASV);
+    }
+    // HO: chỉ chữ + khoảng trắng
+    else if (current == 1) {
+        if (!std::isalpha(c) && c != ' ') hopLe = false;
+        field = sv.HO;
+        maxLen = sizeof(sv.HO);
+    }
+    // TEN: chỉ chữ + khoảng trắng
+    else if (current == 2) {
+        if (!std::isalpha(c) && c != ' ') hopLe = false;
+        field = sv.TEN;
+        maxLen = sizeof(sv.TEN);
+    }
+    // PHAI: chỉ cho nhập N/n hoặc U/u
+    else if (current == 3) {
+        if (c == 'n' || c == 'N') {
+            strcpy(sv.PHAI, "Nam");
+            renderRow(current, true);
+            continue;
         }
+        if (c == 'u' || c == 'U') {
+            strcpy(sv.PHAI, "Nu");
+            renderRow(current, true);
+            continue;
+        }
+        Beep(700, 80);
+        continue;
+    }
+    // PASSWORD: không cho space
+    else {
+        if (std::isspace(c)) {
+            Beep(700, 80);
+            continue;
+        }
+        field = sv.password;
+        maxLen = sizeof(sv.password);
+    }
+
+    if (!hopLe) {
+        Beep(700, 80);
+        continue;   // ❌ CHẶN NGAY – KHÔNG CHO NHẬP
+    }
+
+    size_t len = std::strlen(field);
+    if (len + 1 < maxLen) {
+        field[len] = (char)c;
+        field[len + 1] = '\0';
+        renderRow(current, true);
+    }
+}
+
     }
 }
 
@@ -2281,277 +2448,250 @@ nodeCH* chonCauHoiTrongMon(MonHoc &mh) {
 // ============================
 //  MENU LOGIC (GV / SV / CHINH)
 // ============================ 
-void menuGV(TREE_MH &dsMH, DS_LOP &dsLop){
-    while (true){
-        int ch = menuArrowGV();   // menu mũi tên, không nháy màn hình
+void menuGV(TREE_MH &dsMH, DS_LOP &dsLop) {
+    while (true) {
+        int ch = menuArrowGV();   // menu mũi tên, không nháy
 
-        if(ch==-1) return;
+        if (ch == -1) {
+            return;
+        }
 
+        // ================== 0. ĐĂNG XUẤT ==================
         if (ch == 0) {
             hideCursor(false);
             setColor(7);
             clearConsole();
-            return; // Đăng xuất
+            return;
         }
-        else if (ch == 1) { // Nhập lớp (ESC để hủy ở bất kỳ bước nào)
-    clearConsole();
 
-    char ml[16], tl[51];
+        // ================== 1. NHẬP LỚP ==================
+        else if (ch == 1) {
+            clearConsole();
 
-    if (!readLineEsc("Ma lop (ESC de huy): ", ml, sizeof(ml))) {
-        clearConsole();
-        continue; // quay lại menu nếu bấm ESC
-    }
-    if (!readLineEsc("Ten lop (ESC de huy): ", tl, sizeof(tl))) {
-        clearConsole();
-        continue; // quay lại menu nếu bấm ESC
-    }
+            char ml[16], tl[51];
+            if (!readLineEsc("Ma lop (ESC de huy): ", ml, sizeof(ml))) {
+                clearConsole();
+                continue;
+            }
+            if (!readLineEsc("Ten lop (ESC de huy): ", tl, sizeof(tl))) {
+                clearConsole();
+                continue;
+            }
 
-    if (themLop(dsLop, ml, tl)) {
-        // nếu có hàm saveLop thì lưu file luôn
-        if (saveLop("data/lop.txt", dsLop))
-            cout << "OK (da luu file)\n";
-        else
-            cout << "Da them lop nhung KHONG ghi duoc file!\n";
-    } else {
-        cout << "That bai (day danh sach hoac loi khac).\n";
-    }
+            if (themLop(dsLop, ml, tl)) {
+                if (saveLop("data/lop.txt", dsLop))
+                    cout << "OK (da luu file)\n";
+                else
+                    cout << "Da them lop nhung KHONG ghi duoc file!\n";
+            } else {
+                cout << "That bai (day danh sach hoac loi khac).\n";
+            }
 
-    waitEsc("\nNhan ESC de quay lai menu...");
-    clearConsole();
-}
+            waitEsc("\nNhan ESC de quay lai menu...");
+            clearConsole();
+        }
 
-
-        else if (ch == 2) { // In danh sách lớp
+        // ================== 2. IN DS LỚP ==================
+        else if (ch == 2) {
             xemDSLopBangMuiTen(dsLop);
         }
-        else if (ch == 3) { // Nhập SV vào lớp (có thể ESC để hủy ở bất kỳ bước nào)
-        clearConsole();
 
-        char ml[16];
-         if (!readLineEsc("Nhap ma lop (ESC de huy): ", ml, sizeof(ml))) {
-        clearConsole();           // Hủy ngay
-        continue;                 // quay lại menu
-    }
+        // ================== 3. NHẬP SV VÀO LỚP ==================
+        else if (ch == 3) {
+            clearConsole();
 
-    Lop* lop = timLop(dsLop, ml);
-    if (lop == NULL) {
-        cout << "Khong tim thay lop.\n";
-        waitEsc("\nNhan ESC de quay lai menu...");
-        clearConsole();
-        continue;
-    }
-
-    SinhVien sv{};
-    if (!nhapSinhVienBangForm(sv)){
-        clearConsole();
-        continue;
-    }
-
-    sv.dsDiem.pHead  = NULL;
-    sv.dsDiem.pLast  = NULL;
-    sv.dsDiem.SLDiem = 0;
-
-    if (themSVVaoLop(lop, sv)) {
-        cout << "Da them sinh vien.\n";
-    } else {
-        cout << "Them that bai (co the trung MASV).\n";
-    }
-    waitEsc("\nNhan ESC de quay lai menu...");
-    clearConsole();
-}
-
-      else if (ch == 4) {
-    clearConsole();
-    char mamh[16], tenmh[51];
-
-    if (!readLineEsc("Ma MH (ESC de huy): ",  mamh,  sizeof(mamh)))  { clearConsole(); continue; }
-    if (!readLineEsc("Ten MH (ESC de huy): ", tenmh, sizeof(tenmh))) { clearConsole(); continue; }
-
-    chenMonHoc(dsMH, mamh, tenmh);
-    cout << "Da them/cap nhat mon hoc.\n";
-    waitEsc("\nNhan ESC de quay lai menu...");
-    clearConsole();
-}
-
-    else if (ch == 5) { // Them cau hoi cho mon (chon mon bang menu)
-    clearConsole();
-
-    // GV chon mon bang menu mui ten, khong can nho MAMH
-    nodeMH* n = chonMonThiBangMuiTen(dsMH, NULL); // NULL = lay tat ca mon
-    if (n == NULL) {
-        // ESC hoac khong co mon nao
-        clearConsole();
-        continue;
-    }
-    loadCauHoiTheoMon(n->mh);
-
-    // Den day la da co mon hoc duoc chon trong n->mh
-    CauHoi q{};
-    // Tao ID ngau nhien khong trung trong ngan hang cau hoi cua mon do
-    int id;
-    do {
-        id = randomID();
-    } while (idTonTai(n->mh.dsCH.pHead, id));
-    q.ID = id;
-
-    cout << "Them cau hoi cho mon: " << n->mh.MAMH << " - " << n->mh.TENMH << "\n\n";
-
-    if (!readLineEsc("Noi dung (ESC de huy): ", q.NoiDung, 256)) { clearConsole(); continue; }
-    if (!readLineEsc("A (ESC de huy): ",        q.A, 100))        { clearConsole(); continue; }
-    if (!readLineEsc("B (ESC de huy): ",        q.B, 100))        { clearConsole(); continue; }
-    if (!readLineEsc("C (ESC de huy): ",        q.C, 100))        { clearConsole(); continue; }
-    if (!readLineEsc("D (ESC de huy): ",        q.D, 100))        { clearConsole(); continue; }
-
-    char buf[8];
-    if (!readLineEsc("Dap an (A/B/C/D, ESC de huy): ", buf, sizeof(buf))) {
-        clearConsole();
-        continue;
-    }
-    char da = (char)std::toupper((unsigned char)buf[0]);
-    if (da < 'A' || da > 'D') {
-        da = 'A';
-    }
-    q.DapAn = da;
-
-    themCauHoi(n->mh, q);
-    if (appendCauHoiToFile(n->mh.MAMH,q)) {
-
-    std::cout << "Da luu cau hoi vao file.\n";
-    } else {
-    std::cout << "Them cau hoi thanh cong nhung KHONG ghi duoc file!\n";
-    }
-    cout << "Da them cau hoi (ID " << q.ID << ") cho mon " << n->mh.MAMH << ".\n";
-    waitEsc("\nNhan ESC de quay lai menu...");
-    clearConsole();
-}
-
-
-    else if (ch == 6) { // Sua cau hoi theo ID (nhung GV chon bang menu)
-    clearConsole();
-
-    // 1. Chon mon
-    nodeMH* n = chonMonThiBangMuiTen(dsMH, NULL);
-    if (n == NULL) {
-        clearConsole();
-        continue;
-    }
-    loadCauHoiTheoMon(n->mh);
-
-    // 2. Chon cau hoi trong mon bang mui ten
-    nodeCH* qNode = chonCauHoiTrongMon(n->mh);
-    if (qNode == NULL) {
-        // ESC hoac mon khong co cau
-        clearConsole();
-        continue;
-    }
-
-    int id = qNode->ch.ID;
-
-    clearConsole();
-    std::cout << "=== SUA CAU HOI ===\n";
-    std::cout << "Mon: " << n->mh.MAMH << " - " << n->mh.TENMH << "\n";
-    std::cout << "Dang sua cau hoi ID " << id << "\n\n";
-
-    if (suaCauHoi(n->mh, id)) {
-        std::cout << "Da sua cau hoi.\n";
-    } else {
-        std::cout << "Khong tim thay ID (co the da bi xoa).\n";
-    }
-
-    waitEsc("\nNhan ESC de quay lai menu...");
-    clearConsole();
-}
-
-
-     else if (ch == 7) { // Xoa cau hoi theo ID (chon bang menu)
-    clearConsole();
-
-    // 1. Chon mon
-    nodeMH* n = chonMonThiBangMuiTen(dsMH, NULL);
-    if (n == NULL) {
-        clearConsole();
-        continue;
-    }
-    loadCauHoiTheoMon(n->mh);
-
-    // 2. Chon cau hoi
-    nodeCH* qNode = chonCauHoiTrongMon(n->mh);
-    if (qNode == NULL) {
-        clearConsole();
-        continue;
-    }
-
-    int id = qNode->ch.ID;
-
-    clearConsole();
-    std::cout << "=== XOA CAU HOI ===\n";
-    std::cout << "Mon: " << n->mh.MAMH << " - " << n->mh.TENMH << "\n";
-    std::cout << "Ban dang chon cau hoi ID " << id << "\n\n";
-
-    std::cout << "Ban co chac chac muon XOA cau hoi nay khong? (Y/N): ";
-    while (true) {
-        int c = _getch();
-        if (c == 'y' || c == 'Y') {
-            if (xoaCauHoi(n->mh, id, dsLop, n->mh.MAMH)) {
-                std::cout << "\nDa xoa cau hoi.\n";
-            } else {
-                std::cout << "\nXoa that bai (co the mon da co SV thi hoac khong tim thay ID).\n";
+            Lop* lop = chonLopBangMuiTen(dsLop);
+            if (lop == NULL) {
+                clearConsole();
+                continue;
             }
-            break;
+
+            SinhVien sv{};
+            if (!nhapSinhVienBangForm(sv)) {
+                clearConsole();
+                continue;
+            }
+
+            sv.dsDiem.pHead  = NULL;
+            sv.dsDiem.pLast  = NULL;
+            sv.dsDiem.SLDiem = 0;
+
+            if (themSVVaoLop(lop, sv)) {
+                cout << "Da them sinh vien vao lop " << lop->MALOP << ".\n";
+            } else {
+                cout << "Them that bai (co the trung MASV).\n";
+            }
+
+            waitEsc("\nNhan ESC de quay lai menu...");
+            clearConsole();
         }
-        if (c == 'n' || c == 'N' || c == KEY_ESC) {
-            std::cout << "\nDa huy xoa.\n";
-            break;
+
+        // ================== 4. THÊM / CẬP NHẬT MÔN ==================
+        else if (ch == 4) {
+            clearConsole();
+
+            char mamh[16], tenmh[51];
+            if (!readLineEsc("Ma MH (ESC de huy): ", mamh, sizeof(mamh))) {
+                clearConsole();
+                continue;
+            }
+            if (!readLineEsc("Ten MH (ESC de huy): ", tenmh, sizeof(tenmh))) {
+                clearConsole();
+                continue;
+            }
+
+            chenMonHoc(dsMH, mamh, tenmh);
+            cout << "Da them/cap nhat mon hoc.\n";
+
+            waitEsc("\nNhan ESC de quay lai menu...");
+            clearConsole();
+        }
+
+        // ================== 5. THÊM CÂU HỎI ==================
+        else if (ch == 5) {
+            clearConsole();
+
+            nodeMH* n = chonMonThiBangMuiTen(dsMH, NULL);
+            if (n == NULL) {
+                clearConsole();
+                continue;
+            }
+
+            loadCauHoiTheoMon(n->mh);
+
+            CauHoi q{};
+            int id;
+            do {
+                id = randomID();
+            } while (idTonTai(n->mh.dsCH.pHead, id));
+            q.ID = id;
+
+            cout << "Them cau hoi cho mon: "
+                 << n->mh.MAMH << " - " << n->mh.TENMH << "\n\n";
+
+            if (!readLineEsc("Noi dung (ESC de huy): ", q.NoiDung, 256)) { clearConsole(); continue; }
+            if (!readLineEsc("A (ESC de huy): ", q.A, 100)) { clearConsole(); continue; }
+            if (!readLineEsc("B (ESC de huy): ", q.B, 100)) { clearConsole(); continue; }
+            if (!readLineEsc("C (ESC de huy): ", q.C, 100)) { clearConsole(); continue; }
+            if (!readLineEsc("D (ESC de huy): ", q.D, 100)) { clearConsole(); continue; }
+
+            char buf[8];
+            if (!readLineEsc("Dap an (A/B/C/D): ", buf, sizeof(buf))) {
+                clearConsole();
+                continue;
+            }
+
+            q.DapAn = (char)toupper((unsigned char)buf[0]);
+            if (q.DapAn < 'A' || q.DapAn > 'D') q.DapAn = 'A';
+
+            themCauHoi(n->mh, q);
+            appendCauHoiToFile(n->mh.MAMH, q);
+
+            cout << "Da them cau hoi (ID " << q.ID << ").\n";
+            waitEsc("\nNhan ESC de quay lai menu...");
+            clearConsole();
+        }
+
+        // ================== 6. SỬA CÂU HỎI ==================
+        else if (ch == 6) {
+            clearConsole();
+
+            nodeMH* n = chonMonThiBangMuiTen(dsMH, NULL);
+            if (n == NULL) {
+                clearConsole();
+                continue;
+            }
+
+            loadCauHoiTheoMon(n->mh);
+
+            nodeCH* qNode = chonCauHoiTrongMon(n->mh);
+            if (qNode == NULL) {
+                clearConsole();
+                continue;
+            }
+
+            clearConsole();
+            suaCauHoi(n->mh, qNode->ch.ID);
+
+            waitEsc("\nNhan ESC de quay lai menu...");
+            clearConsole();
+        }
+
+        // ================== 7. XOÁ CÂU HỎI ==================
+        else if (ch == 7) {
+            clearConsole();
+
+            nodeMH* n = chonMonThiBangMuiTen(dsMH, NULL);
+            if (n == NULL) {
+                clearConsole();
+                continue;
+            }
+
+            loadCauHoiTheoMon(n->mh);
+
+            nodeCH* qNode = chonCauHoiTrongMon(n->mh);
+            if (qNode == NULL) {
+                clearConsole();
+                continue;
+            }
+
+            clearConsole();
+            cout << "Ban chac chan muon xoa cau hoi ID "
+                 << qNode->ch.ID << " ? (Y/N): ";
+
+            while (true) {
+                int c = _getch();
+                if (c == 'y' || c == 'Y') {
+                    xoaCauHoi(n->mh, qNode->ch.ID, dsLop, n->mh.MAMH);
+                    break;
+                }
+                if (c == 'n' || c == 'N' || c == KEY_ESC) {
+                    break;
+                }
+            }
+
+            waitEsc("\nNhan ESC de quay lai menu...");
+            clearConsole();
+        }
+
+        // ================== 8. IN CÂU HỎI ==================
+        else if (ch == 8) {
+            clearConsole();
+
+            nodeMH* n = chonMonThiBangMuiTen(dsMH, NULL);
+            if (n == NULL) {
+                clearConsole();
+                continue;
+            }
+
+            loadCauHoiTheoMon(n->mh);
+
+            cout << "=== DANH SACH CAU HOI ===\n";
+            inDanhSachCauHoi(n->mh);
+
+            waitEsc("\nNhan ESC de quay lai menu...");
+            clearConsole();
+        }
+
+        // ================== 9. BÁO CÁO ==================
+        else if (ch == 9) {
+            clearConsole();
+
+            nodeMH* n = chonMonThiBangMuiTen(dsMH, NULL);
+            if (n == NULL) {
+                clearConsole();
+                continue;
+            }
+
+            inTinhTrangThiTheoLop(dsLop, dsMH, n->mh.MAMH);
+
+            waitEsc("\nNhan ESC de quay lai menu...");
+            clearConsole();
         }
     }
-
-    waitEsc("\nNhan ESC de quay lai menu...");
-    clearConsole();
 }
 
 
-  else if (ch == 8) { // In cau hoi mon (chon mon bang menu)
-    clearConsole();
-
-    // Chon mon bang mui ten, khong can nhap MAMH
-    nodeMH* n = chonMonThiBangMuiTen(dsMH, NULL);
-    if (n == NULL) {
-        // ESC hoac khong co mon nao
-        clearConsole();
-        continue;
-    }
-    loadCauHoiTheoMon(n->mh);
-    clearConsole();
-    cout << "=== DANH SACH CAU HOI MON ===\n";
-    cout << "Mon: " << n->mh.MAMH << " - " << n->mh.TENMH << "\n\n";
-
-    inDanhSachCauHoi(n->mh);   // dung ham cu, chi truyen MonHoc
-
-    waitEsc("\nNhan ESC de quay lai menu...");
-    clearConsole();
-}
-
-else if (ch == 9) {
-    clearConsole();
-
-    // GV chọn môn bằng menu mũi tên (NULL = lấy tất cả môn)
-    nodeMH* n = chonMonThiBangMuiTen(dsMH, NULL);
-    if (n == NULL) {
-        // ESC hoặc không có môn
-        clearConsole();
-        continue;
-    }
-
-    // gọi báo cáo theo mã môn đã chọn
-    inTinhTrangThiTheoLop(dsLop, dsMH, n->mh.MAMH);
-
-    waitEsc("\nNhan ESC de quay lai menu...");
-    clearConsole();
-}
-
-    }
-}
 
 bool xacNhanThiMon(const MonHoc& mh, int& soCau, int& soPhut) {
     UILayout L;
@@ -2966,7 +3106,7 @@ int chonDapAnBangMuiTen(const CauHoi &q, int yStart, char daChonCu) {
                     bool newChosen = (daChonCu == ('A' + pos));
                     drawAnswerLine(label[pos], nd[pos], yStart + pos, true);
                 } else if (k == 80) {     // ↓
-                    bool oldChosen = (daChonCu = ('A' + pos));
+                    bool oldChosen = (daChonCu == ('A' + pos));
                     drawAnswerLine(label[pos], nd[pos], yStart + pos, false);
                     pos=pos+1;
                     if (pos > 3) pos = 0;
@@ -3080,13 +3220,24 @@ bool validateSinhVien(const SinhVien &sv, std::string &msg) {
         msg = "Ho khong duoc rong!";
         return false;
     }
+    for (const unsigned char* p = (const unsigned char*)sv.HO; *p; ++p) {
+    if (!std::isalpha(*p) && !std::isspace(*p)) {
+        msg = "Ho chi duoc chua chu va khoang trang!";
+        return false;
+    }
+}
 
     // TEN
     if (std::strlen(sv.TEN) == 0) {
         msg = "Ten khong duoc rong!";
         return false;
     }
-
+    for (const unsigned char* p = (const unsigned char*)sv.TEN; *p; ++p) {
+    if (!std::isalpha(*p) && !std::isspace(*p)) {
+        msg = "Ten chi duoc chua chu va khoang trang!";
+        return false;
+    }
+}
     // PHAI = Nam / Nu (khong dau, ko phan biet hoa thuong)
     std::string phai;
     for (const unsigned char* p = (const unsigned char*)sv.PHAI; *p; ++p) {
@@ -3110,6 +3261,8 @@ bool validateSinhVien(const SinhVien &sv, std::string &msg) {
     msg.clear();
     return true;
 }
+
+
 bool validateCauHoi(const CauHoi &ch, std::string &msg) {
     if (std::strlen(ch.NoiDung) == 0) {
         msg = "Noi dung cau hoi khong duoc rong!";
