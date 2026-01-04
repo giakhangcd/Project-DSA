@@ -1,0 +1,21 @@
+KTMT|3001|CPU viet tat cua?|Central Processing Unit|Control Protocol Unit|Compute Power Unit|Compute Process Utility|A
+KTMT|3002|RAM dung de lam gi?|Luu tru tam thoi|Luu tru lau dai|Tang FPS|Ket noi USB|A
+KTMT|3003|ALU dung de lam gi?|Tinh toan so hoc va logic|Nhap xuat du lieu|Xu ly do hoa|Xu ly am thanh|A
+KTMT|3004|Bit la gi?|Don vi du lieu nho nhat|1 byte|1 KB|1 MB|A
+KTMT|3005|Thanh ghi la gi?|Bo nho cuc nhanh trong CPU|RAM|SSD|ROM|A
+KTMT|3006|Cache dung de lam gi?|Tang toc truy cap du lieu gan CPU|Mo rong o cung|Tang dung luong RAM|Luu he dieu hanh|A
+KTMT|3007|Von Neumann la gi?|Kien truc CPU dung bo nho chung cho lenh va du lieu|Ten mot chip|He dieu hanh|Giao thuc noi mang|A
+KTMT|3008|Don vi do tan so CPU la?|Hz|Bit|Byte|Joule|A
+KTMT|3009|ROM co tinh chat gi?|Chi doc va luu tru lau dai|Chi ghi|Chi trai dat|Doi duoc dung luong|A
+KTMT|3010|SSD nhanh hon HDD vi?|Dung bo nho flash khong co dia quay|Co dia quay toc do cao|Co nhieu dau doc|Tang bo nho dem|A
+KTMT|3011|Bus la gi?|Duong truyen du lieu giua cac thiet bi|Mot loai RAM|Mot CPU thu nho|Mot cong USB|A
+KTMT|3012|Mainboard dung de?|Ket noi cac thanh phan may tinh|Chua he dieu hanh|Chua du lieu nguoi dung|Tang toc do mang|A
+KTMT|3013|GPU dung de lam gi?|Xu ly do hoa|Xu ly am thanh|Xu ly logic|Xu ly file van ban|A
+KTMT|3014|Thanh ghi PC dung de?|Chua dia chi lenh tiep theo|Luu ket qua ALU|Luu bien moi|Chua tap tin|A
+KTMT|3015|Thanh ghi SP dung de?|Quan ly ngan xep stack|Luu du lieu RAM|Luu file tam|Luu tap lenh|A
+KTMT|3016|Clock CPU dung de?|Dong bo hoat dong CPU|Tang bo nho|Ket noi PCIe|Tang FPS|A
+KTMT|3017|Kich thuoc thanh ghi 64-bit nghia la?|Xu ly so 64-bit|Xu ly so 16-bit|Xu ly so 8-bit|Chi luu 1 ky tu|A
+KTMT|3018|Bo nh nho cap 1 L1 co dac diem?|Rat nho nhung rat nhanh|Rat lon nhung cham|SSD dieu khien|RAM mo rong|A
+KTMT|3019|Tang so loi CPU giup?|Chay nhieu nhiem nhanh hon|Lam CPU mat hon|Tang FPS|Giam tieu thu dien|A
+KTMT|3020|DMA dung de?|Truyen du lieu truc tiep giua thiet bi va RAM|Tang toc CPU|Lam mat CPU|Khoi tao BIOS|AKTMT|129613|1+1|1|2|3|4|B
+

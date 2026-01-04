@@ -1,0 +1,25 @@
+D21CQCN01|SV001|Nguyen Van|An|Nam|12345
+D21CQCN01|SV002|Tran Thi|Binh|Nu|abcde
+D21CQCN01|SV003|Le Hoang|Phuc|Nam|pass1
+D21CQCN02|SV004|Pham Quang|Huy|Nam|pw123
+D21CQCN02|SV005|Do Thi|Lan|Nu|hello
+D21CQCN02|SV006|Hoang Minh|Tri|Nam|svsv1
+
+D21CQKT01|SV007|Nguyen Thi|Hong|Nu|32145
+D21CQKT01|SV008|Vu Van|Khai|Nam|kt123
+D21CQKT01|SV009|Ly Phuong|Anh|Nu|99999
+
+
+D21CQDL01|SV010|Phan Thi|My|Nu|123abc
+D21CQDL01|SV011|Tran Quoc|Bao|Nam|11111
+D21CQDL02|SV012|Le Ngoc|Yen|Nu|yenpw
+D21CQDL02|SV013|Pham Gia|Khang|Nam|khang1
+
+D21CQAT01|SV014|Nguyen Tien|Dat|Nam|at01
+D21CQAT01|SV015|Pham Thi|Kim|Nu|kim123
+D21CQAT01|SV016|Tran Huu|Nghia|Nam|nghia2
+
+D21CQAT02|SV017|Hoang Le|Long|Nam|at02
+D21CQAT02|SV018|Do Thi|Nhi|Nu|nhinhinhi
+D21CQAT02|SV019|Le Duc|Thang|Nam|thang1
+D21CQAT02|SV020|Pham Quoc|An|Nam|an123
