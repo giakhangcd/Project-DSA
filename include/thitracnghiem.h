@@ -37,6 +37,9 @@ struct MonHoc {
     char TENMH[51];
     int height;      // giữ theo đề (không dùng AVL cũng OK)
     DS_CauHoi dsCH;  // thay vì chỉ Firstcht
+    int soCauThi;
+    int soPhutThi;
+    int trangThaiThi;
 
     MonHoc() {
         MAMH[0] = '\0';
@@ -68,6 +71,7 @@ struct MonLop {
 struct DiemThi {
     char MAMH[16];
     float diem;
+    int lanThi;
 };
 
 struct nodeDiem {
@@ -174,10 +178,7 @@ bool suaCauHoi(MonHoc &mh, int id);
 bool xoaCauHoi(MonHoc &mh, int id, const DS_LOP& ds, const char* mamh);
 int  demCauHoi(PTRCH head);
 void inDanhSachCauHoi(const MonHoc &mh);
-char lamMotCauHoi(
-    const CauHoi &q,
-    int tongGiay,
-    std::chrono::steady_clock::time_point batDau
+char lamMotCauHoi(const CauHoi &q,int tongGiay,std::chrono::steady_clock::time_point batDau
 );
 void inCauHoiChon(const CauHoi &q, int chiSoLuaChon);
 void drawAnswerLine(const char* label, const char* nd, int y, bool highlight);
@@ -206,6 +207,10 @@ void luuKetQuaThi(const SinhVien &sv, const char* mamh, int diem, int thoiGian);
 void docCauHoiChoMotMon(MonHoc &mh);
 void docFileMonLop();
 void giaiPhongMonLop();
+void ghiLaiFileCauHoi(const MonHoc& mh);
+bool xacNhanSuaCauHoiPopup();
+bool formSuaCauHoi(CauHoi &ch); 
+
 
 // ===== CAU HOI THEO MON =====
 void giaiPhongDanhSachCauHoi(MonHoc &mh);

@@ -1,7 +1,6 @@
 CTDL|1001|Cau truc du lieu la gi?|Tap hop du lieu co to chuc|File du lieu tren o cung|Thu vien ham san co|He dieu hanh|A
 CTDL|1002|Mang la gi?|Danh sach tuyen tinh cac phan tu cung kieu|Danh sach cac nut co con tro|Cau truc cay|Do thi|A
 CTDL|1003|Danh sach lien ket la gi?|Cac nut noi voi nhau bang con tro|Mang 2 chieu|Cay nhi phan tim kiem|Bang bam|A
-CTDL|1004|Stack dung nguyen tac nao?|LIFO|FIFO|Random|Sorted|A
 CTDL|1005|Queue dung nguyen tac nao?|FIFO|LIFO|Random|Theo do uu tien|A
 CTDL|1006|Node trong danh sach lien ket don chua gi?|Du lieu va con tro next|Chi du lieu|Chi con tro prev|Dia chi mang|A
 CTDL|1007|Cau truc du lieu nao phu hop voi de quy?|Stack|Queue|Heap|Hash table|A
@@ -18,5 +17,4 @@ CTDL|1017|De luu cap key value tra cuu nhanh thi dung?|Map|Queue|Stack|Danh sach
 CTDL|1018|Phuong phap sap xep nao co do phuc tap O(n^2)?|Selection sort|Merge sort|Quick sort trung binh|Heap sort|A
 CTDL|1019|Phuong phap sap xep chia de tri co do phuc tap O(n log n)?|Merge sort|Selection sort|Bubble sort|Insertion sort|A
 CTDL|1020|Bang bam hash table dung de lam gi?|Tra cuu nhanh theo khoa|Sap xep danh sach|Duyet cay|Mo rong bo nho|A
-
-CTDL|122805|1+1|2|3|4|5|A
+CTDL|122805|1+2|3|4|5|6|A

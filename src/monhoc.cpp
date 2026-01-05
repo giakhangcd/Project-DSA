@@ -149,6 +149,10 @@ nodeMH* taoNodeMH(const char* mamh, const char* tenmh){
     p->mh.dsCH.SLCH = 0;
     p->mh.dsCH.pHead = NULL;
     p->mh.dsCH.pLast = NULL;
+
+    p->mh.soCauThi = 0;
+    p->mh.soPhutThi = 0;
+
     p->left = p->right = NULL;
     return p;
 }

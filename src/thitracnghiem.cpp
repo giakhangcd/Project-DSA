@@ -234,9 +234,10 @@ int menuArrowGV() {
         "7. Xoa cau hoi theo ID",
         "8. In cau hoi mon",
         "9. Bao cao tinh trang thi theo lop (theo mon)",
+        "10. Nhap lich thi ",
         "0. Dang xuat"
     };
-    const int total = 10;
+    const int total = 11;
 
     hideCursor(true);
     setColor(7);
@@ -992,6 +993,11 @@ static void xoaFooterGrid(const FooterGrid& G) {
     bool ketThuc  = false;
     bool daNop    = false;  // true khi da xac nhan nop bai
     bool huyBai   = false;  // true khi ESC
+    gFooterInited = false;
+    gExamLayoutReady = false;
+
+    xoaFooterGrid(gFooter);
+    gExamLayoutReady = false;
 
     int conLaiInit = tongGiay;
     conLaiCu       = conLaiInit;
@@ -1203,6 +1209,7 @@ if (soCau == 0) {
 } else {
     diem = dung * 10.0f / soCau;
 }
+mh.trangThaiThi = 0;
 
 // =============== LƯU CHI TIẾT BÀI THI ===============
 luuBaiThiChiTiet(masv, mamh, dsCauThi, dsDaChon, soCau);
@@ -1960,6 +1967,133 @@ bool xacNhanThemSinhVienPopup() {
 }
 
 
+bool formSuaCauHoi(CauHoi &ch) {
+    int field = 0;
+    const int MAX_FIELD = 6; // 0..5 field, 6 = XAC NHAN
+
+    while (true) {
+        clearConsole();
+        cout << "===== SUA CAU HOI =====\n\n";
+
+        auto drawLine = [&](int idx, const char* label, const char* value) {
+            if (field == idx) setColor(240);
+            else setColor(7);
+
+            cout << label << ": " << value << "\n";
+            setColor(7);
+        };
+
+        drawLine(0, "Noi dung", ch.NoiDung);
+        drawLine(1, "Dap an A", ch.A);
+        drawLine(2, "Dap an B", ch.B);
+        drawLine(3, "Dap an C", ch.C);
+        drawLine(4, "Dap an D", ch.D);
+
+        char da[2] = { ch.DapAn, '\0' };
+        drawLine(5, "Dap an dung", da);
+
+        if (field == 6) setColor(240);
+        cout << "[ XAC NHAN SUA ]\n";
+        setColor(7);
+
+        cout << "\nUP/DOWN: di chuyen | Go + BACKSPACE: sua | ENTER: xac nhan | ESC: huy\n";
+
+        int c = _getch();
+
+        // ESC
+        if (c == KEY_ESC) return false;
+
+        // Mũi tên
+        if (c == 0 || c == 224) {
+            int c2 = _getch();
+            if (c2 == 72) field = (field - 1 + MAX_FIELD + 1) % (MAX_FIELD + 1);
+            else if (c2 == 80) field = (field + 1) % (MAX_FIELD + 1);
+            continue;
+        }
+
+        // ENTER chỉ cho xác nhận
+        if (c == 13 && field == 6) {
+            return xacNhanSuaCauHoiPopup();
+        }
+
+        // ===== GÕ + BACKSPACE TRỰC TIẾP =====
+        char* buf = nullptr;
+        size_t maxLen = 0;
+
+        switch (field) {
+            case 0: buf = ch.NoiDung; maxLen = sizeof(ch.NoiDung); break;
+            case 1: buf = ch.A; maxLen = sizeof(ch.A); break;
+            case 2: buf = ch.B; maxLen = sizeof(ch.B); break;
+            case 3: buf = ch.C; maxLen = sizeof(ch.C); break;
+            case 4: buf = ch.D; maxLen = sizeof(ch.D); break;
+            case 5:
+                if (c >= 'a' && c <= 'd') ch.DapAn = c - 32;
+                if (c >= 'A' && c <= 'D') ch.DapAn = c;
+                continue;
+            default:
+                continue;
+        }
+
+        if (c == 8) { // BACKSPACE
+            size_t len = strlen(buf);
+            if (len > 0) buf[len - 1] = '\0';
+        }
+        else if (isprint(c)) {
+            size_t len = strlen(buf);
+            if (len + 1 < maxLen) {
+                buf[len] = (char)c;
+                buf[len + 1] = '\0';
+            }
+        }
+    }
+}
+
+
+bool xacNhanSuaCauHoiPopup() {
+    int choice = 0; // 0 = YES, 1 = NO
+
+    short x = 0;
+    short y = 20;
+
+    gotoXY(x, y);
+    std::cout << "Ban co chac chan muon SUA cau hoi nay khong?\n";
+
+    auto draw = [&](int c){
+        gotoXY(x, y + 2);
+        if (c == 0)
+            std::cout << "[YES]    no   ";
+        else
+            std::cout << " yes    [NO]  ";
+        std::cout.flush();
+    };
+
+    draw(choice);
+
+    gotoXY(x, y + 4);
+    std::cout << "Dung TRAI/PHAI hoac A/D, ENTER de xac nhan, ESC de huy";
+
+    while (true) {
+        int c = _getch();
+
+        if (c == KEY_ESC) return false;
+
+        if (c == 0 || c == 224) {
+            int c2 = _getch();
+            if (c2 == 75 || c2 == 77) { // LEFT / RIGHT
+                choice = 1 - choice;
+                draw(choice);
+            }
+        }
+        else if (c == 'a' || c == 'A' || c == 'd' || c == 'D') {
+            choice = 1 - choice;
+            draw(choice);
+        }
+        else if (c == 13) { // ENTER
+            return (choice == 0);
+        }
+    }
+}
+
 
 bool nhapSinhVienBangForm(SinhVien &sv) {
     // Khởi tạo rỗng
@@ -2611,11 +2745,24 @@ void menuGV(TREE_MH &dsMH, DS_LOP &dsLop) {
             }
 
             clearConsole();
-            suaCauHoi(n->mh, qNode->ch.ID);
 
-            waitEsc("\nNhan ESC de quay lai menu...");
-            clearConsole();
-        }
+            bool daXacNhanSua = formSuaCauHoi(qNode->ch);
+
+            if (daXacNhanSua) {
+            if (xacNhanSuaCauHoiPopup()) {
+            ghiLaiFileCauHoi(n->mh);   // ✅ chỉ ghi khi YES
+            std::cout << "\nDa cap nhat cau hoi.\n";
+            } else {
+            loadCauHoiTheoMon(n->mh);  // 🔄 rollback
+            std::cout << "\nDa huy sua cau hoi.\n";
+    }
+}
+else{
+    std::cout << "\nDa huy sua cau hoi\n";
+}
+waitEsc("\nNhan ESC de quay lai menu...");
+clearConsole();
+}
 
         // ================== 7. XOÁ CÂU HỎI ==================
         else if (ch == 7) {
@@ -2688,9 +2835,59 @@ void menuGV(TREE_MH &dsMH, DS_LOP &dsLop) {
             waitEsc("\nNhan ESC de quay lai menu...");
             clearConsole();
         }
+
+        // ================== 10. LẬP LỊCH THI ==================
+else if (ch == 10) {
+    clearConsole();
+
+    nodeMH* n = chonMonThiBangMuiTen(dsMH, NULL);
+    if (n == NULL) {
+        clearConsole();
+        continue;
     }
+    loadCauHoiTheoMon(n->mh);
+    int tongCH = demCauHoi(n->mh.dsCH.pHead);
+
+    cout << "Lap lich thi cho mon: "
+         << n->mh.MAMH << " - " << n->mh.TENMH << "\n\n";
+
+    int soCau, soPhut;
+
+    if (!readIntEsc("Nhap so cau thi: ", soCau)) {
+        clearConsole();
+        continue;
+    }
+    if (!readIntEsc("Nhap so phut thi: ", soPhut)) {
+        clearConsole();
+        continue;
+    }
+
+    if (soCau <= 0 || soPhut <= 0) {
+        cout << "Gia tri khong hop le.\n";
+        waitEsc("\nNhan ESC de quay lai...");
+        clearConsole();
+        continue;
+    }
+
+    tongCH = demCauHoi(n->mh.dsCH.pHead);
+    if (soCau > tongCH) {
+        cout << "So cau thi lon hon so cau hien co (" << tongCH << ").\n";
+        waitEsc("\nNhan ESC de quay lai...");
+        clearConsole();
+        continue;
+    }
+
+    n->mh.soCauThi  = soCau;
+    n->mh.soPhutThi = soPhut;
+    n->mh.trangThaiThi = 1;
+
+    cout << "Da lap lich thi thanh cong!\n";
+    waitEsc("\nNhan ESC de quay lai menu...");
+    clearConsole();
 }
 
+    }
+}
 
 
 bool xacNhanThiMon(const MonHoc& mh, int& soCau, int& soPhut) {
@@ -2708,16 +2905,10 @@ bool xacNhanThiMon(const MonHoc& mh, int& soCau, int& soPhut) {
 
         if (k == 'N' || k == 'n' || k == 27) {
             return false;
-        }
+        }   
     }
-
-    boxPrint(L, 3, 7, "Nhap so cau muon thi (<= 20): ");
-    gotoXY(L.boxX + 34, L.boxY + 7);
-    std::cin >> soCau;
-
-    boxPrint(L, 3, 8, "Nhap so phut: ");
-    gotoXY(L.boxX + 16, L.boxY + 8);
-    std::cin >> soPhut;
+     soCau  = mh.soCauThi;
+     soPhut = mh.soPhutThi;
 
     return true;
 }
@@ -2860,12 +3051,12 @@ static void menuSV(TREE_MH &dsMH, DS_LOP &dsLop, SinhVien* sv, Lop *lop){
                 continue;
             }
 
-            if (svDaThiMon(*sv, n->mh.MAMH)) {
-                std::cout << "Ban da thi mon nay roi.\n";
-                waitEsc("\nNhan ESC de quay lai menu...");
-                clearConsole();
-                continue;
-            }
+            if (n->mh.trangThaiThi == 0) {
+                    cout << "Ban thi mon nay roi\n";
+                    waitEsc("\nNhan ESC de quay lai...");
+                    return;
+                    }
+
 
             int tong = demCauHoi(n->mh.dsCH.pHead);
             if (tong == 0) {
