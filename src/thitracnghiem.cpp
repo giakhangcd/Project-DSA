@@ -15,6 +15,9 @@
 #include <ctime>     
 #include <chrono>
 #include <thread>
+#include <sstream>
+#include <vector>
+#include <cctype>
 
 using namespace std;
 
@@ -118,6 +121,44 @@ void themCuoiDiem(DS_DiemThi& ds, const DiemThi& x) {
 }
 
 
+int demLanThiTrongFile(const char* masv, const char* mamh) {
+    std::ifstream f("data/baithi_chitiet.txt");
+    if (!f.is_open()) return 0;
+
+    std::string line;
+    std::string sMasv = masv;
+    std::string sMamh = mamh;
+
+    int maxLan = 0;
+    
+
+    while (std::getline(f, line)) {
+        if (line.empty()) continue;
+
+        // Format mới sẽ là: MASV|MAMH|LAN|ID|DADUNG|DASV
+        // Nhưng để tránh crash khi file còn dữ liệu cũ, ta parse mềm:
+        std::stringstream ss(line);
+        std::string fMasv, fMamh, fLan;
+
+        if (!std::getline(ss, fMasv, '|')) continue;
+        if (!std::getline(ss, fMamh, '|')) continue;
+        if (!std::getline(ss, fLan,  '|')) continue;
+
+        if (fMasv != sMasv || fMamh != sMamh) continue;
+
+        // nếu fLan không phải số (dữ liệu cũ) thì bỏ qua
+        bool ok = true;
+        for (char c : fLan) if (!isdigit((unsigned char)c)) { ok = false; break; }
+        if (!ok) continue;
+
+        int lan = std::atoi(fLan.c_str());
+        if (lan > maxLan) maxLan = lan;
+    }
+    return maxLan;
+}
+
+
+
 // ======= THI =======
 bool svDaThiMon(const SinhVien& sv, const char* mamh){
     // 1) check trong RAM (nhanh)
@@ -151,7 +192,7 @@ bool svDaThiMon(const SinhVien& sv, const char* mamh){
 
 
 bool luuDiem(SinhVien &sv, const char* mamh, float diem){
-    if(svDaThiMon(sv, mamh)) return false;
+    
 
     DiemThi x;
     strcpy(x.MAMH, mamh);
@@ -911,16 +952,20 @@ void xoaBaiThiCuCuaSV(const char* masv, const char* mamh) {
 void luuBaiThiChiTiet(
     const char* masv,
     const char* mamh,
+    int lanThi,
     const CauHoi dsCau[],   // mảng câu hỏi đã thi
     const char dsDaChon[],  // mảng đáp án sinh viên chọn
     int soCau
-){
-    xoaBaiThiCuCuaSV(masv, mamh);
+){  
     // Nên để trong thư mục data cho gọn
     std::ofstream f("data/baithi_chitiet.txt", std::ios::app);
     if (!f.is_open()) {
         std::cout << "Khong mo duoc file data/baithi_chitiet.txt\n";
         return;
+    }
+
+    if(lanThi > 1){
+        f << '\n';
     }
 
     for (int i = 0; i < soCau; i = i + 1) {
@@ -931,6 +976,7 @@ void luuBaiThiChiTiet(
 
         f << masv                << '|'
           << mamh                << '|'
+          << lanThi              << '|'
           << dsCau[i].ID         << '|'
           << dsCau[i].DapAn      << '|'
           << daSv                << '\n';
@@ -946,7 +992,7 @@ static void xoaFooterGrid(const FooterGrid& G) {
 }
 
 
-   float thiTracNghiem(MonHoc &mh, int soCau, int soPhut, const char* masv, const char* mamh){
+   float thiTracNghiem(MonHoc &mh, int soCau, int soPhut, const char* masv, const char* mamh,int lanThi){
        clearConsole();
        int tongGiay = soPhut * 60;
        auto batDau = std::chrono::steady_clock::now();
@@ -1197,7 +1243,7 @@ if (soCau == 0) {
 mh.trangThaiThi = 0;
 
 // =============== LƯU CHI TIẾT BÀI THI ===============
-luuBaiThiChiTiet(masv, mamh, dsCauThi, dsDaChon, soCau);
+luuBaiThiChiTiet(masv, mamh, lanThi, dsCauThi, dsDaChon, soCau);
 
 // (Nếu muốn lưu file tổng hợp điểm theo ngày thì có thể gọi thêm
 // luuKetQuaThi(*sv, mamh, (int)std::round(diem), soPhut); ở ngoài menuSV)
@@ -1642,6 +1688,7 @@ void xemBaiThiCuaSV(TREE_MH dsMH, const char* masv, const char* mamh){
     std::string sMamh(mamh);
 
     struct Record {
+        int lan;
         int  id;
         char daDung;
         char daSv;
@@ -1654,16 +1701,12 @@ void xemBaiThiCuaSV(TREE_MH dsMH, const char* masv, const char* mamh){
         if(line.empty()){
             continue;
         }
-
         std::stringstream ss(line);
-        std::string fileMasv;
-        std::string fileMamh;
-        std::string idStr;
-        std::string daDungStr;
-        std::string daSvStr;
+        std::string fileMasv, fileMamh, lanStr, idStr, daDungStr, daSvStr;
 
         if(!std::getline(ss, fileMasv, '|')) continue;
         if(!std::getline(ss, fileMamh, '|')) continue;
+        if(!std::getline(ss, lanStr,  '|')) continue;
         if(!std::getline(ss, idStr,     '|')) continue;
         if(!std::getline(ss, daDungStr, '|')) continue;
         if(!std::getline(ss, daSvStr,   '|')) continue;
@@ -1676,13 +1719,25 @@ void xemBaiThiCuaSV(TREE_MH dsMH, const char* masv, const char* mamh){
         }
 
         Record r;
+        r.lan = std::atoi(lanStr.c_str());
         r.id = std::atoi(idStr.c_str());
-
         r.daDung = daDungStr.empty() ? '-' : daDungStr[0];
         r.daSv   = daSvStr.empty()   ? '-' : daSvStr[0];
 
         recs.push_back(r);
     }
+
+    int maxLan = 0;
+for (auto &r : recs)
+    if (r.lan > maxLan)
+        maxLan = r.lan;
+
+std::vector<Record> filtered;
+for (auto &r : recs)
+    if (r.lan == maxLan)
+        filtered.push_back(r);
+
+recs = filtered;
 
     f.close();
     clearConsole();
@@ -3028,6 +3083,13 @@ static void menuSV(TREE_MH &dsMH, DS_LOP &dsLop, SinhVien* sv, Lop *lop){
             if (n == NULL) continue;
             loadCauHoiTheoMon(n->mh);
 
+            if (n->mh.trangThaiThi !=1) {
+                    cout << "mon nay chua len lich\n";
+                    waitEsc("\nNhan ESC de quay lai...");
+                    clearConsole();
+                    continue;
+            }
+
             int soCau = 0;
             int soPhut = 0;
             if (!xacNhanThiMon(n->mh, soCau, soPhut)) {
@@ -3035,19 +3097,8 @@ static void menuSV(TREE_MH &dsMH, DS_LOP &dsLop, SinhVien* sv, Lop *lop){
                 clearConsole();
                 continue;
             }
-
-            if (n->mh.trangThaiThi !=1) {
-                    cout << "mon nay chua len lich\n";
-                    waitEsc("\nNhan ESC de quay lai...");
-                    clearConsole();
-                    continue;
-                    }
-            if(svDaThiMon(*sv,n->mh.MAMH)){
-                cout << "Ban da thi mon nay roi\n";
-                waitEsc("\nNhan esc de quay lai...");
-                clearConsole();
-                continue;
-            }
+            int lanThi = demLanThiTrongFile(sv->MASV, n->mh.MAMH) + 1;
+            float d = thiTracNghiem(n->mh, soCau, soPhut, sv->MASV, n->mh.MAMH, lanThi);
 
 
             int tong = demCauHoi(n->mh.dsCH.pHead);
@@ -3060,8 +3111,6 @@ static void menuSV(TREE_MH &dsMH, DS_LOP &dsLop, SinhVien* sv, Lop *lop){
             if (soCau > tong) {
                 soCau = tong;
             }
-
-            float d = thiTracNghiem(n->mh, soCau, soPhut, sv->MASV, n->mh.MAMH);
             if (d >= 0.0f) {
                 if (luuDiem(*sv, n->mh.MAMH, d)) {
                     std::cout << "Da luu diem.\n";
