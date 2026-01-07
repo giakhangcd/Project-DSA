@@ -63,24 +63,35 @@ bool themSVVaoLop(Lop* lop, const SinhVien &sv){
     return true;
 }
 
-
-SinhVien* dangNhap(DS_LOP &ds, const char* masv_or_gv, const char* pass, Lop** outLop){
-    if(strcmp(masv_or_gv, "GV")==0 && strcmp(pass, "GV")==0){
-        *outLop = NULL;
-        return NULL; // dùng NULL + outLop=NULL làm “quyền GV”
+void toUpperCase(char* s) {
+    for (int i = 0; s[i]; i++) {
+        s[i] = (char)toupper((unsigned char)s[i]);
     }
-    for(int i=0;i<ds.n;i++){
-        PTRSV p = ds.nodes[i]->dsSV.pHead;
-        while(p){
-            if(strcmp(p->sv.MASV, masv_or_gv)==0 && strcmp(p->sv.password, pass)==0){
-                *outLop = ds.nodes[i];
-                return &p->sv;
+}
+
+
+SinhVien* dangNhap(DS_LOP &dsLop, const char* u, const char* p, Lop** lopOut) {
+    char userUpper[32];
+    strcpy(userUpper, u);
+    toUpperCase(userUpper);
+
+    for (int i = 0; i < dsLop.n; i++) {
+        Lop* lop = dsLop.nodes[i];
+        PTRSV sv = lop->dsSV.pHead;
+
+        while (sv != NULL) {
+            if (strcmp(sv->sv.MASV, userUpper) == 0 &&
+                strcmp(sv->sv.password, p) == 0) {
+
+                if (lopOut) *lopOut = lop;
+                return &sv->sv;
             }
-            p = p->next;
+            sv = sv->next;
         }
     }
     return NULL;
 }
+
 
 void themCuoiSV(DS_SinhVien& ds, const SinhVien& x) {
     PTRSV n = taoNodeSV(x);
