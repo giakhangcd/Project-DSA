@@ -20,6 +20,8 @@ using namespace std;
 
 static UILayout gExamLayout;
 static bool gExamLayoutReady = false;
+static bool gDaVeKhungThi = false;  
+static UILayout gLayoutThi;          
 static void capNhatDongHoBenPhai(const UILayout& L, int conLai);
 
 
@@ -769,42 +771,43 @@ static void veManHinhThi(
     int soPhut)
 {
     // 1) Layout khung chính ở giữa
-    static bool daVeKhung = false;
-    static UILayout L;
+    static UILayout gLayoutThi;
 
-    if (!daVeKhung) {
-        beginScreenBox("DE THI TRAC NGHIEM", 100, 25, L);
-        gExamLayout = L;
-        gExamLayoutReady = true;
-    
-        veFooterGrid(L, soCau, gFooter);
-    for (int i = 0;i<gFooter.cols;i++){
+    if (!gDaVeKhungThi) {
+    beginScreenBox("DE THI TRAC NGHIEM", 100, 25, gLayoutThi);
+
+    gExamLayout = gLayoutThi;
+    gExamLayoutReady = true;
+
+    veFooterGrid(gLayoutThi, soCau, gFooter);
+    for (int i = 0; i < gFooter.cols; i++) {
         capNhatFooterCell(gFooter, i, dsDaChon[i], (i == cursor));
     }
-        // vẽ panel phụ 1 lần (nếu anh muốn giữ)
-        // vẽ các đường kẻ / khung cố định 1 lần
-        capNhatDongHoBenPhai(gExamLayout, conLai);
-        daVeKhung = true;
-        gFooterInited = true;
+
+    capNhatDongHoBenPhai(gExamLayout, conLai);
+
+    gDaVeKhungThi = true;
+    gFooterInited = true;
 }
 
+
     // Xoá vùng nội dung câu hỏi + đáp án bên trong khung chính
-    short contentX = (short)(L.boxX + 2);
-    short contentY = (short)(L.boxY + 5);
-    short contentW = (short)(L.boxW - 2);
-    short contentH = (short)(L.boxH - 5 );
+    short contentX = (short)(gLayoutThi.boxX + 2);
+    short contentY = (short)(gLayoutThi.boxY + 5);
+    short contentW = (short)(gLayoutThi.boxW - 2);
+    short contentH = (short)(gLayoutThi.boxH - 5 );
     clearRect(contentX, contentY, contentW, contentH);
 
 
     short sideW = 20;
-    short sideH = L.boxH;
-    short sideX = L.boxX + L.boxW + 2;
-    short sideY = L.boxY;
+    short sideH = gLayoutThi.boxH;
+    short sideX = gLayoutThi.boxX + gLayoutThi.boxW + 2;
+    short sideY = gLayoutThi.boxY;
 
     short CW, CH;
     getConsoleWindowSize(CW, CH);
     if (sideX + sideW >= CW) {
-        sideX = L.boxX - sideW - 2; // nếu không đủ chỗ thì đặt bên trái
+        sideX = gLayoutThi.boxX - sideW - 2; // nếu không đủ chỗ thì đặt bên trái
     }
     gotoXY(sideX + 2, sideY + 1);
      
@@ -814,19 +817,19 @@ static void veManHinhThi(
     
     // 3) Vẽ header trong khung chính
 
-    boxPrint(L, 3, 3, "Huong dan:  Left/Right do    i cau | UP/DOWN chon A/B/C/D | ENTER chon | ESC huy");
+    boxPrint(gLayoutThi, 3, 3, "Huong dan:  Left/Right do    i cau | UP/DOWN chon A/B/C/D | ENTER chon | ESC huy");
 
     // 4) Nếu đang ở dòng NOP BAI
     if (cursor == soCau) {
-        boxPrint(L, 3, 6, "[ NOP BAI ]");
+        boxPrint(gLayoutThi, 3, 6, "[ NOP BAI ]");
     } else {
         // 5) Vẽ CHỈ 1 câu hiện tại
         int i = cursor;
-        boxPrint(L, 3, 5, "Cau %d/%d (ID %d):", i + 1, soCau, dsCau[i].ID);
-        boxPrint(L, 3, 6, "%s", dsCau[i].NoiDung);
+        boxPrint(gLayoutThi, 3, 5, "Cau %d/%d (ID %d):", i + 1, soCau, dsCau[i].ID);
+        boxPrint(gLayoutThi, 3, 6, "%s", dsCau[i].NoiDung);
 
         // vẽ 4 đáp án (anh có thể tận dụng drawAnswerLine)
-        int baseY = L.boxY + 9;
+        int baseY = gLayoutThi.boxY + 9;
 
         bool daA = (dsDaChon[i] == 'A');
         bool daB = (dsDaChon[i] == 'B');
@@ -836,11 +839,11 @@ static void veManHinhThi(
         // curOpt phải lấy từ biến điều khiển bên ngoài (đáp án đang trỏ)
         // tạm thời nếu anh chưa có curOpt thì cứ highlight = false hết
         // vị trí theo khung
-        short startX = (short)(L.boxX + 2);
-        short startY = (short)(L.boxY + 8);
+        short startX = (short)(gLayoutThi.boxX + 2);
+        short startY = (short)(gLayoutThi.boxY + 8);
 
 // boxW là độ rộng phần chữ trong ô (không tính label)
-        short boxW = (short)(L.boxW - 20);
+        short boxW = (short)(gLayoutThi.boxW - 20);
         short boxH = 3;
 
 // highlight theo đáp án đang trỏ (nếu anh chưa có curOpt thì để false hết như hiện tại)
@@ -993,11 +996,11 @@ static void xoaFooterGrid(const FooterGrid& G) {
     bool ketThuc  = false;
     bool daNop    = false;  // true khi da xac nhan nop bai
     bool huyBai   = false;  // true khi ESC
+    gDaVeKhungThi = false;
     gFooterInited = false;
     gExamLayoutReady = false;
 
-    xoaFooterGrid(gFooter);
-    gExamLayoutReady = false;
+    // xoaFooterGrid(gFooter);
 
     int conLaiInit = tongGiay;
     conLaiCu       = conLaiInit;
@@ -1057,79 +1060,61 @@ static void xoaFooterGrid(const FooterGrid& G) {
         veMotDapAn(gExamLayout, dsCauThi[cursor],curAns, true, dsDaChon[cursor] == "ABCD"[curAns]);
 }
 
-    else if (c2 == 75) { // LEFT: câu trước
-        int oldCursor = cursor;
-        cursor = cursor - 1;
-        if (cursor < 0) cursor = soCau ;
+    else if (c2 == 75) { // LEFT
+    int oldCursor = cursor;
 
-        // nếu câu đã chọn rồi thì curAns nhảy về đáp án đó
-        if(cursor < soCau){
+    // 1) đổi cursor
+    cursor--;
+    if (cursor < 0) cursor = soCau; // vòng về NOP BAI
+
+    // 2) set curAns theo đáp án đã chọn của câu mới
+    if (cursor < soCau) {
         if (dsDaChon[cursor] == 'A') curAns = 0;
         else if (dsDaChon[cursor] == 'B') curAns = 1;
         else if (dsDaChon[cursor] == 'C') curAns = 2;
         else if (dsDaChon[cursor] == 'D') curAns = 3;
         else curAns = 0;
-        }
-        else{
-            curAns = 0;
-        }
-        capNhatFooterCell(gFooter, oldCursor, dsDaChon[oldCursor], false);
-        if (cursor < soCau) capNhatFooterCell(gFooter, cursor, dsDaChon[cursor], true);
-        if(cursor < soCau){
-            veNoiDungCau_KhongClear(gExamLayout, dsCauThi[cursor], dsDaChon[cursor], curAns, cursor, soCau);
-        }
-        else
-            capNhatFooterCell(gFooter, oldCursor, 0, false); // hoặc bỏ qua
+    } else {
+        curAns = 0; // đang ở NOP BAI
     }
+
+    // 3) cập nhật footer highlight
+    if (oldCursor < soCau) capNhatFooterCell(gFooter, oldCursor, dsDaChon[oldCursor], false);
+    if (cursor   < soCau) capNhatFooterCell(gFooter, cursor,   dsDaChon[cursor],   true);
+
+    // 4) quan trọng nhất: vẽ lại nội dung theo cursor mới
+    veCauHienTai(gExamLayout, dsCauThi, dsDaChon, soCau, cursor, curAns);
+}
+
 
 
     else if (c2 == 77) { // RIGHT
     int oldCursor = cursor;
 
-    // từ câu cuối → sang NỘP BÀI
-    if (cursor == soCau - 1) {
-        cursor = soCau;   // NỘP BÀI
-    }
-    // từ các câu khác → câu tiếp
-    else if (cursor < soCau - 1) {
-        cursor++;
-    }
+    // 1) đổi cursor
+    if (cursor == soCau - 1) cursor = soCau;      // từ câu cuối -> NOP BAI
+    else if (cursor < soCau - 1) cursor++;        // câu bình thường -> câu tiếp
+    else if (cursor == soCau) cursor = 0;         // từ NOP BAI -> về câu 1 (tuỳ bạn)
 
-    // cập nhật footer
-    capNhatFooterCell(gFooter, oldCursor, dsDaChon[oldCursor], false);
-    if (cursor < soCau)
-        capNhatFooterCell(gFooter, cursor, dsDaChon[cursor], true);
-        else
-            capNhatFooterCell(gFooter, oldCursor, 0, false); // hoặc bỏ qua
-    // vẽ nội dung
-    if (cursor == soCau) {
-        // giao diện NỘP BÀI
-        clearRect(
-            gExamLayout.boxX + 2,
-            gExamLayout.boxY + 5,
-            gExamLayout.boxW - 2,
-            gExamLayout.boxH - 5
-        );
-        boxPrint(gExamLayout, 3, 6, "[ NOP BAI ]");
-        boxPrint(gExamLayout, 3, 8, "Nhan ENTER de nop bai");
-    } else {
-        // vẽ câu bình thường
+    // 2) set curAns theo đáp án đã chọn của câu mới
+    if (cursor < soCau) {
         if (dsDaChon[cursor] == 'A') curAns = 0;
         else if (dsDaChon[cursor] == 'B') curAns = 1;
         else if (dsDaChon[cursor] == 'C') curAns = 2;
         else if (dsDaChon[cursor] == 'D') curAns = 3;
         else curAns = 0;
-
-        veNoiDungCau_KhongClear(
-            gExamLayout,
-            dsCauThi[cursor],
-            dsDaChon[cursor],
-            curAns,
-            cursor,
-            soCau
-        );
+    } else {
+        curAns = 0; // đang ở NOP BAI
     }
+
+    // 3) cập nhật footer highlight
+    if (oldCursor < soCau) capNhatFooterCell(gFooter, oldCursor, dsDaChon[oldCursor], false);
+    if (cursor   < soCau) capNhatFooterCell(gFooter, cursor,   dsDaChon[cursor],   true);
+
+    // 4) quan trọng nhất: vẽ lại nội dung theo cursor mới
+    veCauHienTai(gExamLayout, dsCauThi, dsDaChon, soCau, cursor, curAns);
 }
+
 }
 
 else if (c == 13) { // ENTER
@@ -3051,11 +3036,18 @@ static void menuSV(TREE_MH &dsMH, DS_LOP &dsLop, SinhVien* sv, Lop *lop){
                 continue;
             }
 
-            if (n->mh.trangThaiThi == 0) {
-                    cout << "Ban thi mon nay roi\n";
+            if (n->mh.trangThaiThi !=1) {
+                    cout << "mon nay chua len lich\n";
                     waitEsc("\nNhan ESC de quay lai...");
-                    return;
+                    clearConsole();
+                    continue;
                     }
+            if(svDaThiMon(*sv,n->mh.MAMH)){
+                cout << "Ban da thi mon nay roi\n";
+                waitEsc("\nNhan esc de quay lai...");
+                clearConsole();
+                continue;
+            }
 
 
             int tong = demCauHoi(n->mh.dsCH.pHead);
@@ -3074,7 +3066,7 @@ static void menuSV(TREE_MH &dsMH, DS_LOP &dsLop, SinhVien* sv, Lop *lop){
                 if (luuDiem(*sv, n->mh.MAMH, d)) {
                     std::cout << "Da luu diem.\n";
                 } else {
-                    std::cout << "Khong luu duoc (co the da thi truoc do).\n";
+                    std::cout << "";
                 }
             }
 
