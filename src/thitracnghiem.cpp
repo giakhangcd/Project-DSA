@@ -2330,7 +2330,7 @@ if (c >= 32 && c < 127 && current <= 4) {
     }
     // TEN: chỉ chữ + khoảng trắng
     else if (current == 2) {
-        if (!std::isalpha(c) && c != ' ') hopLe = false;
+        if (!std::isalpha(c) || c == '|') hopLe = false;
         field = sv.TEN;
         maxLen = sizeof(sv.TEN);
     }
@@ -2691,6 +2691,10 @@ void menuGV(TREE_MH &dsMH, DS_LOP &dsLop) {
             sv.dsDiem.SLDiem = 0;
 
             if (themSVVaoLop(lop, sv)) {
+                for (int i = 0; sv.MASV[i];i++){
+                    sv.MASV[i] = (char)toupper((unsigned char)sv.MASV[i]);
+                }
+                saveSinhVien("data/sinhvien.txt", dsLop);
                 cout << "Da them sinh vien vao lop " << lop->MALOP << ".\n";
             } else {
                 cout << "Them that bai (co the trung MASV).\n";
@@ -2715,7 +2719,12 @@ void menuGV(TREE_MH &dsMH, DS_LOP &dsLop) {
             }
 
             chenMonHoc(dsMH, mamh, tenmh);
+            if(saveMonHoc("data/monhoc.txt", dsMH)){
             cout << "Da them/cap nhat mon hoc.\n";
+        }
+        else{
+            cout << "loi";
+        }
 
             waitEsc("\nNhan ESC de quay lai menu...");
             clearConsole();

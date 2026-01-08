@@ -50,6 +50,9 @@ bool loadSinhVien(const char* path, DS_LOP &dsLop);
 bool loadCauHoi (const char* path, TREE_MH &dsMH);
 bool loadDiemThi(const char* path, DS_LOP &dsLop, TREE_MH &dsMH);
 bool saveCauHoiTheoMon(const char* mamh, const MonHoc& mh);
+bool saveSinhVien(const char* path, const DS_LOP& dsLop);
+bool saveMonHoc(const char* path, TREE_MH dsMH);
+
 
 
 

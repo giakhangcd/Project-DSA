@@ -1,8 +1,10 @@
+MAMH|TENMH
+ANHTNN|Tieng Anh nang cao
+CSDL|Co so du lieu
 CTDL|Cau truc du lieu
 GT|Giai tich
-XSTK|Xac suat thong ke
-OOP|Lap trinh huong doi tuong
-MANGMT|Mang may tinh
 KTMT|Kien truc may tinh
-CSDL|Co so du lieu
-ANHTNN|Tieng Anh nang cao
+MANGMT|Mang may tinh
+OOP|Lap trinh huong doi tuong
+XSTK|Xac suat thong ke
+

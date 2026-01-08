@@ -300,6 +300,53 @@ bool loadMonHoc(const char* path, TREE_MH &dsMH) {
     return true;
 }
 
+static void _writeMonHocInOrder(std::ofstream& out, TREE_MH t) {
+    if (t == NULL) return;
+    _writeMonHocInOrder(out, t->left);
+
+    out << t->mh.MAMH << "|" << t->mh.TENMH << "\n";
+
+    _writeMonHocInOrder(out, t->right);
+}
+
+bool saveMonHoc(const char* path, TREE_MH dsMH) {
+    std::ofstream out(path, std::ios::out | std::ios::trunc);
+    if (!out.is_open()) return false;
+
+    // header (tuỳ bạn có muốn hay không)
+    out << "MAMH|TENMH\n";
+
+    _writeMonHocInOrder(out, dsMH);
+
+    out.close();
+    return true;
+}
+
+bool saveSinhVien(const char* path, const DS_LOP& dsLop) {
+    std::ofstream f(path, std::ios::out | std::ios::trunc);
+    if (!f.is_open()) return false;
+
+    for (int i = 0; i < dsLop.n; i++) {
+        Lop* lop = dsLop.nodes[i];
+        PTRSV sv = lop->dsSV.pHead;
+
+        while (sv != NULL) {
+            f << lop->MALOP << "|"
+              << sv->sv.MASV << "|"
+              << sv->sv.HO << "|"
+              << sv->sv.TEN << "|"
+              << sv->sv.PHAI << "|"
+              << sv->sv.password << "\n";
+
+            sv = sv->next;
+        }
+    }
+
+    f.close();
+    return true;
+}
+
+
 
 bool loadLop(const char* path, DS_LOP &dsLop) {
     std::ifstream f(path);
